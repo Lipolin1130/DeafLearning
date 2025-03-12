@@ -1,0 +1,141 @@
+  /* 1. 最外層：全螢幕背景 + 字體設定 */
+  .scenario-simulation-container {
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 60px); /* 扣除頂部導航60px */
+    margin-top: 60px;           /* 避免被 fixed header 蓋住 */
+    background: url('../assets/home.png') center/cover no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* 加入淡黃色遮罩 */
+  .scenario-simulation-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(225, 215, 190, 0.7); /* 淡黃色遮罩，透明度 50% */
+    z-index: 1; /* 確保遮罩在背景上，但不影響其他內容 */
+  }
+
+  /* 確保內部內容不被遮罩影響 */
+  .scenario-simulation-container > * {
+    position: relative;
+    z-index: 2;
+  }
+  
+  /* 2. 右上角「回上頁」按鈕
+  .back-button {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    background: #fff;
+    color: #333333;
+    border: 2px solid #000;
+    border-radius: 999px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+    text-shadow: 0.5px 0.5px 0px rgba(0, 0, 0, 0.3);
+  }
+
+  .back-button:hover {
+    color: #de5b5b;
+  } */
+  
+  /* 3. 左上角標題區 (Logo + 「生聲—情景模擬」) */
+  .every-title-area {
+    position: absolute;
+    top: 0px; /* 確保不被 fixed header 擋住 */
+    left: 0px;
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-radius: 8px;
+    z-index: 10; /* 提高層級，避免被 header 蓋住 */
+  }
+  
+  .every-heart-hand {
+    width: 50px;
+    height: auto;
+    margin-right: 0rem;
+  }
+  
+  .every-title-area h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    text-shadow: 0.5px 0.5px 0px rgba(0, 0, 0, 0.3); /* 增強粗體感 */
+  }
+
+  /* 4. 三欄分佈（初級 / 中級 / 高級）
+  .levels {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 4rem;
+  }
+  
+  單一欄位（含標題 + 清單）
+  .level {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 1rem 2rem;
+    border-radius: 8px;
+  } */
+
+  /* 4. 三欄分佈（初級 / 中級 / 高級） */
+  .levels {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 4rem;
+    gap: 4rem; /* 增加三欄之間的間距 */
+  }
+
+  /* 單一欄位（含標題 + 清單） */
+  .level {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 1rem 5rem;
+    border-radius: 8px;
+    min-width: 250px; /* 防止欄位過窄 */
+    font-weight: bold;
+    text-shadow: 0.5px 0.5px 0px rgba(0, 0, 0, 0.3); /* 增強粗體感 */
+  }
+  
+  .level h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .level ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .level li {
+    margin: 1rem 0;
+  }
+  
+  .level a {
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-shadow: 0.5px 0.5px 0px rgba(0, 0, 0, 0.3); /* 增強粗體感 */
+    color: #000;
+    transition: transform 0.2s ease, color 0.2s;
+  }
+  
+  .level a:hover {
+    transform: scale(1.1);
+    color: #d9534f;
+  }
+  

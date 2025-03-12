@@ -1,0 +1,296 @@
+/* 1. 全局樣式 */
+body {
+  /* font-family: "Klee One", "Noto Sans TC", sans-serif; */
+  background-color: #FCE7DA; /* 淡粉色背景 */
+}
+
+/* 2. 整體容器 */
+.scenario-detail-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  height: calc(100vh - 60px);
+  margin-top: 60px;
+}
+
+/* 3. 主要內容區塊 */
+.scenario-content {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 1rem;
+}
+
+/* 4. 左側 - 圖片區 */
+.scenario-images {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 30%;
+}
+
+.scenario-img {
+  width: 100%;
+  max-width: 350px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  border: 4px solid #333;
+}
+
+/* 5. 中間 - 文字 & 相似度區 */
+.scenario-middle {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-shadow: 0.5px 0.5px 0px rgba(0, 0, 0, 0.3);
+  border: 4px solid #333;
+
+  max-width: 360px;
+  max-height: 550px;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+.scenario-middle p, 
+.scenario-middle .advice-text {
+  white-space: pre-wrap;
+  word-break: break-all;     /* 最強制的斷行方式，無論中英文都會被切開 */
+  overflow-wrap: break-word;
+  white-space: normal;
+  margin: 0.5rem 0;
+}
+
+.advice-label {
+  color: #000;
+  font-weight: bold;
+}
+
+.advice-text {
+  color: #de5b5b;
+  font-weight: bold;
+}
+
+/* 6. 右側 - AI 口型對照 */
+.scenario-ai {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.ai-face {
+  width: 100%;
+  max-width: 350px;
+  border-radius: 12px;
+  border: 4px solid #333;
+}
+
+.setting-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #fff;
+  border: 2px solid #000;
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+/* 7. 錄音按鈕 */
+.record-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: #fff;
+    border: 3px solid #000;
+    border-radius: 30px;
+    padding: 0.5rem 3rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 3px 3px 0px #000;
+    margin-top: 1rem;
+  }
+  
+  /* 麥克風圖示 */
+  .microphone-icon {
+    font-size: 1.5rem;
+  }
+  
+  /* 錄音時變紅色 */
+  .record-btn.recording {
+    background: #de5b5b;
+    color: white;
+    border-color: #000;
+    box-shadow: 3px 3px 0px #000;
+  }
+  
+  /* 「錄音」文字 */
+  .record-text {
+    font-size: 1rem;
+  }
+
+/* 8. 返回按鈕 */
+.go-back-button {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  background: #fff;
+  color: #333333;
+  border: 2px solid #000;
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  text-decoration: none; /* 移除底線 */
+  text-shadow: 0.5px 0.5px 0px rgba(0, 0, 0, 0.3); /* 增強粗體感 */
+}
+
+.go-back-button:hover {
+    color: #de5b5b;
+  }
+
+/* 9. 播放速度設定選單
+.play-speed-menu {
+  position: absolute;
+  top: 50px;
+  right: 10px;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+  font-size: 1rem;
+}
+
+.play-speed-menu label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.play-speed-menu input[type="radio"] {
+  accent-color: #de5b5b;
+} */
+
+/** =========================
+ 讓左側圖片最下方出現「選擇地點 + 開始」並排
+ ========================== **/
+ .location-controls {
+  /* 讓下拉選單與按鈕並排 */
+  display: flex;
+  gap: 1rem; 
+  position: fixed;
+  bottom: 3.5rem;
+  left: 200px;
+}
+
+/* 若想微調下拉式選單的寬度或樣式，可再加 */
+.location-controls select {
+  padding: 0.5rem 0.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border: 2px solid #000;
+  border-radius: 5px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.location-controls label {
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: #000;
+  margin-right: -10px; /* 若想讓「選擇地點：」靠近下拉, 可調負值 */
+}
+
+/* 若想微調「開始」按鈕，也可增加樣式 */
+.location-controls button {
+  cursor: pointer;
+  border: 2px solid #000;
+  background: #ff8080;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  box-shadow: 2px 2px 0px #000;
+  border-radius: 5px;
+  transition: transform 0.2s ease;
+}
+
+.location-controls button:hover {
+  transform: translate(-2px, -2px);
+}
+
+/** =========================
+ 讓圖片能承載對話框(bubble)
+ ========================== **/
+/* 假設你想把對話框放在第二張圖片上，就要在JSX裡幫第二張圖片外面包一個div，
+   並在該div加上「position: relative」，以便對話框可以絕對定位 */
+.dialog-image-container {
+  position: relative;
+  display: inline-block;
+}
+
+/** =========================
+ 對話框(bubble)樣式：白底 + 黑邊 + 箭頭
+ ========================== **/
+.dialog-bubble {
+  position: absolute;
+  /* 可以自行微調對話框在圖片上的位置 */
+  bottom: 35%; 
+  left: 35%; 
+  transform: translate(-80%, 0);
+  
+  /* 外觀樣式 */
+  background: #fff;
+  border: 3.5px solid #555;
+  border-radius: 10px;
+  padding: 0.5rem;
+  font-size: 1rem;
+  color: #000;
+  max-width: 130px; /* 依需要調整對話框寬度 */
+  box-shadow: 2px 2px 0px #555;
+  z-index: 10; /* 確保泡泡顯示在圖片上方 */
+  text-align: center;
+}
+
+/** 讓泡泡底部有個小箭頭：先用黑色做外層箭頭 */
+.dialog-bubble::before {
+  content: "";
+  position: absolute;
+  bottom: -25px;
+  left: 15px;
+  border-width: 18px 18px 0;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent; 
+}
+
+/** 再用做白色的內層, 形成「黑邊」效果 **/
+.dialog-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -20px; /* 往下凸出泡泡 */
+  left: 22px;    /* 箭頭起始位置，可微調 */
+  border-width: 10px 10px 0; /* 箭頭大小 */
+  border-style: solid;
+  border-color: #fff transparent transparent transparent;
+}

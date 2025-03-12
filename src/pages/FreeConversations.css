@@ -1,0 +1,118 @@
+.chat-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    height: calc(100vh - 60px);
+    margin-top: 60px;
+    background-color: #FCE7DA;
+  }
+  
+  .chat-box {
+    width: 90%;
+    max-width: 800px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    position: relative;
+    border: 4px solid #b8a390;
+  }
+  
+  /* .back-button {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    color: gray;
+    text-decoration: none;
+  } */
+  
+  .chat-title {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 16px;
+    color: #463030;
+  }
+  
+  .chat-messages {
+    max-height: 350px;
+    overflow-y: auto;
+    padding: 10px;
+    border: 2px solid #b8a390;
+    border-radius: 10px;
+    background: #fefff0;
+  }
+  
+  .message {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  
+  .message.ai {
+    justify-content: flex-start;
+  }
+  
+  .message.user {
+    justify-content: flex-end;
+  }
+  
+  .avatar {
+    font-size: 1.5rem;
+    margin-right: 8px;
+  }
+  
+  .audio-player {
+    width: 150px;
+    border-radius: 5px;
+    /* border: 1px solid #c4a484;
+    background: #f8ead6; */
+    padding: 4px;
+  }
+
+  .book-icon {
+    margin-left: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+  }
+  
+  .chat-controls {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 15px;
+    background: #fefff0;
+    border: 2px solid #b8a390;
+    padding: 15px;
+    border-radius: 10px;
+    width: 100%;
+  }
+  
+  .icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    padding: 8px;
+  }
+  
+  .record-button {
+    background: red;
+    color: white;
+    padding: 12px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+  }
+
+  .record-button.active {
+    background: darkred;
+  }
+  

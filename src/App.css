@@ -1,0 +1,55 @@
+/* src/App.css */
+
+/* ======== 1. Reset & 全域字體設定 ======== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+@import url('https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&display=swap');
+
+body {
+  font-family: "Klee One", "Noto Sans TC", sans-serif;
+  background-color: #f8f8f8; /* 基本底色 */
+}
+
+/* ======== 2. 頂部導覽列 ======== */
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+
+  /* 彩色漸層可自行調整: */
+  background: linear-gradient(90deg, #aaa 0%, #eee 100%);
+
+  display: flex;
+  align-items: center;
+  box-shadow: 0 5px 5px rgba(0,0,0,0.1);
+  z-index: 100;
+  padding: 0 2rem;
+}
+
+.main-nav ul {
+  list-style: none;
+  display: flex;
+}
+
+.main-nav li {
+  margin-right: 1.5rem;
+}
+
+.main-nav a {
+  text-decoration: none;
+  color: #333;
+  font-size: 1rem;
+  line-height: 60px;
+  font-weight: bold;
+  transition: color 0.3s;
+  text-shadow: 0.5px 0.5px 0px rgba(0, 0, 0, 0.3); /* 增強粗體感 */
+}
+
+.main-nav a:hover {
+  color: #de5b5b;
+}
