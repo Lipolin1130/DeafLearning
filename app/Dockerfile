@@ -2,11 +2,12 @@
 FROM python:3.11-slim
 
 # 設定工作目錄
-WORKDIR /app
+# WORKDIR /app
 
 # 安裝系統依賴
 RUN apt-get update && apt-get install -y \
     libsndfile1 \
+    ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
 # 複製 requirements.txt 並安裝 Python 依賴
