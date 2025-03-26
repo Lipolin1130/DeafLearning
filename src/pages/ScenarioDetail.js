@@ -8,10 +8,17 @@ import './ScenarioDetail.css';
 import defaultImage1 from '../assets/default1.jpg';
 import defaultImage2 from '../assets/default2.jpg';
 
-// 嘴型 GIF
-import mouthGif1 from '../assets/mouth1.gif';
-import mouthGif2 from '../assets/mouth2.gif';
-import mouthGif3 from '../assets/mouth3.gif';
+// 口型影片 (mp4 檔案)
+import mouthVideo1 from '../assets/mouth1.mp4';
+import mouthVideo2 from '../assets/mouth2.mp4';
+import mouthVideo3 from '../assets/mouth3.mp4';
+import mouthVideo4 from '../assets/mouth4.mp4';
+import mouthVideo5 from '../assets/mouth5.mp4';
+import mouthVideo6 from '../assets/mouth6.mp4';
+import mouthVideo7 from '../assets/mouth7.mp4';
+import mouthVideo8 from '../assets/mouth8.mp4';
+// import mouthVideo9 from '../assets/mouth9.mp4';
+import mouthVideo10 from '../assets/mouth10.mp4';
 
 // 示範：地點用不同圖片
 import classroomImg1 from '../assets/classroom1.png';
@@ -29,48 +36,48 @@ const scenarioData = {
       "教室": {
         images: [classroomImg1, classroomImg2],
         lines: [
-          { text: "老師，這題可以再解釋一次嗎？", mouthGif: mouthGif1 },
-          { text: "老師，這個作業是幾號交？", mouthGif: mouthGif2 },
-          { text: "老師，剛剛那題的答案是什麼？", mouthGif: mouthGif1 },
-          { text: "老師我的肚子不舒服！", mouthGif: mouthGif2 },
-          { text: "你有聽到老師剛剛講什麼？", mouthGif: mouthGif3 },
-          { text: "你有多的鉛筆嗎？", mouthGif: mouthGif1 },
-          { text: "你的作業寫完了嗎？", mouthGif: mouthGif2 },
-          { text: "你的筆記可以借我看一下嗎？", mouthGif: mouthGif3 },
-          { text: "你的尺掉了，我幫你撿起來！", mouthGif: mouthGif1 },
-          { text: "下課要不要一起去福利社買東西？", mouthGif: mouthGif2 }
+          { text: "老師，這題可以再解釋一次嗎？", mouthVideo: mouthVideo1 },
+          { text: "老師，這個作業是幾號交？", mouthVideo: mouthVideo2 },
+          { text: "老師，剛剛那題的答案是什麼？", mouthVideo: mouthVideo3 },
+          { text: "老師我的肚子不舒服！", mouthVideo: mouthVideo4 },
+          { text: "你有聽到老師剛剛講什麼？", mouthVideo: mouthVideo5 },
+          { text: "你有多的鉛筆嗎？", mouthVideo: mouthVideo6 },
+          { text: "你的作業寫完了嗎？", mouthVideo: mouthVideo7 },
+          { text: "你的筆記可以借我看一下嗎？", mouthVideo: mouthVideo8 },
+          // { text: "你的尺掉了，我幫你撿起來！", mouthVideo: mouthVideo9 },
+          { text: "下課要不要一起去福利社買東西？", mouthVideo: mouthVideo10 }
         ]
       },
-      "操場": {
-        images: [playgroundImg1, playgroundImg2],
-        lines: [
-          { text: "我們一起來打球吧！", mouthGif: mouthGif3 },
-          { text: "我想練跑步，你要一起嗎？", mouthGif: mouthGif1 },
-          { text: "操場上有很多同學在運動。", mouthGif: mouthGif2 },
-          { text: "小心！不要跑太快，容易跌倒。", mouthGif: mouthGif1 },
-          { text: "請幫我撿一下那顆籃球。", mouthGif: mouthGif2 },
-          { text: "你想玩躲避球還是羽毛球？", mouthGif: mouthGif3 },
-          { text: "太陽很大，別忘了補充水分。", mouthGif: mouthGif2 },
-          { text: "這裡可以自由活動，但要注意安全。", mouthGif: mouthGif1 },
-          { text: "我們一起做體操好嗎？", mouthGif: mouthGif2 },
-          { text: "我可以和你組隊打球嗎？", mouthGif: mouthGif3 }
-        ]
-      },
-      "保健室": {
-        images: [healthOfficeImg1, healthOfficeImg2],
-        lines: [
-          { text: "我肚子痛，想請護士阿姨看看。", mouthGif: mouthGif1 },
-          { text: "頭好痛，可以量一下體溫嗎？", mouthGif: mouthGif3 },
-          { text: "我不小心摔倒了，需要擦藥。", mouthGif: mouthGif2 },
-          { text: "請問有沒有感冒藥可以拿？", mouthGif: mouthGif1 },
-          { text: "我想休息一下再回去上課。", mouthGif: mouthGif3 },
-          { text: "護士說要先填寫健康狀況表。", mouthGif: mouthGif2 },
-          { text: "最近天氣變化大，要小心感冒。", mouthGif: mouthGif1 },
-          { text: "你也不舒服嗎？要不要一起等醫生？", mouthGif: mouthGif2 },
-          { text: "喝點溫水休息一下，會好一點。", mouthGif: mouthGif1 },
-          { text: "謝謝你的照顧，我好像好多了。", mouthGif: mouthGif3 }
-        ]
-      }
+      // "操場": {
+      //   images: [playgroundImg1, playgroundImg2],
+      //   lines: [
+      //     { text: "可以借我一顆球嗎？", mouthVideo: mouthVideo11 },
+      //     { text: "小心！球飛過來了！", mouthVideo: mouthVideo12 },
+      //     { text: "我可以加入你們的隊伍嗎？", mouthVideo: mouthVideo13 },
+      //     { text: "太熱了，我要休息一下。", mouthVideo: mouthVideo14 },
+      //     { text: "這裡有長椅，我們坐一下吧！", mouthVideo: mouthVideo15 },
+      //     { text: "我的鞋帶鬆了。", mouthVideo: mouthVideo16 },
+      //     { text: "小心別摔倒，地上有點濕滑！", mouthVideo: mouthVideo17 },
+      //     { text: "我們換個地方玩吧！", mouthVideo: mouthVideo18 },
+      //     { text: "我們還差一個人才能比賽。", mouthVideo: mouthVideo19 },
+      //     { text: "我不太會踢足球，你可以教我嗎？", mouthVideo: mouthVideo20 }
+      //   ]
+      // },
+      // "保健室": {
+      //   images: [healthOfficeImg1, healthOfficeImg2],
+      //   lines: [
+      //     { text: "我剛剛在操場跑步時扭傷了腳！", mouthVideo: mouthVideo21 },
+      //     { text: "可以幫我量體溫嗎？", mouthVideo: mouthVideo22 },
+      //     { text: "我的眼睛很癢。", mouthVideo: mouthVideo23 },
+      //     { text: "我最近一直咳嗽，可能是感冒了。", mouthVideo: mouthVideo24 },
+      //     { text: "我的心跳好像有點快！", mouthVideo: mouthVideo25 },
+      //     { text: "我可以休息一下嗎？", mouthVideo: mouthVideo26 },
+      //     { text: "我可以打電話給家長嗎？", mouthVideo: mouthVideo27 },
+      //     { text: "我好像過敏了。", mouthVideo: mouthVideo28 },
+      //     { text: "我想吐！", mouthVideo: mouthVideo29 },
+      //     { text: "我咳嗽得很厲害。", mouthVideo: mouthVideo30 }
+      //   ]
+      // }
     }
   },
   family: {
@@ -80,22 +87,22 @@ const scenarioData = {
       "客廳": {
         images: [defaultImage1, defaultImage2],
         lines: [
-          { text: "家庭對話1", mouthGif: mouthGif1 },
-          { text: "家庭對話2", mouthGif: mouthGif2 }
+          { text: "家庭對話1", mouthVideo: mouthVideo1 },
+          { text: "家庭對話2", mouthVideo: mouthVideo1 }
         ]
       },
       "廚房": {
         images: [defaultImage1, defaultImage2],
         lines: [
-          { text: "家庭對話3", mouthGif: mouthGif3 },
-          { text: "家庭對話4", mouthGif: mouthGif2 }
+          { text: "家庭對話3", mouthVideo: mouthVideo1 },
+          { text: "家庭對話4", mouthVideo: mouthVideo1 }
         ]
       },
       "房間": {
         images: [defaultImage1, defaultImage2],
         lines: [
-          { text: "家庭對話5", mouthGif: mouthGif1 },
-          { text: "家庭對話6", mouthGif: mouthGif3 }
+          { text: "家庭對話5", mouthVideo: mouthVideo1 },
+          { text: "家庭對話6", mouthVideo: mouthVideo1 }
         ]
       }
     }
@@ -106,6 +113,7 @@ function ScenarioDetail() {
   const { topic } = useParams();
   const mediaRecorder = useRef(null);
   const audioChunks = useRef([]);
+  const videoRef = useRef(null); // 用於控制影片播放
 
   // 錄音/音訊相關狀態
   const [isRecording, setIsRecording] = useState(false);
@@ -122,11 +130,11 @@ function ScenarioDetail() {
   const [selectedLocation, setSelectedLocation] = useState("");
   const [currentLineObj, setCurrentLineObj] = useState(null);
 
-  // 分析結果 (顯示在中間區)
+  // 評估結果與建議狀態
   const [similarity, setSimilarity] = useState("");
   const [advice, setAdvice] = useState("");
 
-  // 下拉式選單變動
+  // 下拉選單變動
   const handleLocationChange = (e) => {
     setSelectedLocation(e.target.value);
     setCurrentLineObj(null);
@@ -151,8 +159,7 @@ function ScenarioDetail() {
     locationImages = currentScenario.locations[selectedLocation].images;
   }
 
-  // ============== 錄音核心功能 ==============
-  // 開始錄音
+  // 錄音核心功能
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -169,19 +176,21 @@ function ScenarioDetail() {
         const audioBlob = new Blob(audioChunks.current, { type: 'audio/wav' });
         const audioUrl = URL.createObjectURL(audioBlob);
         setAudioURL(audioUrl);
-
-        // 錄音結束後，進行分析（後端實際分析）
+        // 錄音結束後，進行分析
         handleAnalyze(audioBlob);
       };
 
       mediaRecorder.current.start();
       setIsRecording(true);
+      // 錄音開始時，暫停影片播放
+      if (videoRef.current) {
+        videoRef.current.pause();
+      }
     } catch (error) {
       console.error('無法錄音:', error);
     }
   };
 
-  // 停止錄音
   const stopRecording = () => {
     if (mediaRecorder.current) {
       mediaRecorder.current.stop();
@@ -189,20 +198,20 @@ function ScenarioDetail() {
     }
   };
 
-  // 一個按鈕 toggle 開始/停止
   const toggleRecording = () => {
     if (isRecording) {
-      // 若正在錄音 → 停止
       stopRecording();
+      // 錄音停止後，自動播放影片
+      if (videoRef.current) {
+        videoRef.current.play();
+      }
     } else {
-      // 若未錄音 → 開始
       startRecording();
     }
   };
 
-  // ============== 分析: 向後端請求 ==============
+  // 分析: 向後端請求
   const handleAnalyze = async (audioBlob) => {
-    // 若當前還沒隨機出句子，就提示
     if (!currentLineObj) {
       setSimilarity("--");
       setAdvice("請先選擇地點並產生句子");
@@ -212,24 +221,22 @@ function ScenarioDetail() {
     try {
       const formData = new FormData();
       formData.append("file", audioBlob, `_userAudio.wav`);
-      // 修改 key 為 "text" 而非 "targetText"
       formData.append("text", currentLineObj.text);
-  
+
       const res = await fetch("http://localhost:5000/api/analyze", {
         method: "POST",
         body: formData
       });
       const data = await res.json();
       console.log("後端回傳內容:", data);
-  
+
       if (data.error) {
         console.error("後端錯誤:", data.error);
         setSimilarity("失敗");
         setAdvice("後端錯誤：" + data.error);
       } else {
-        // 使用從後端回傳的 evaluation 作為相似度與建議
         setSimilarity(data.evaluation || "--");
-        setAdvice(data.evaluation || "請再試一次");
+        setAdvice(data.advice || "請再試一次");
       }
     } catch (error) {
       console.error("分析時發生錯誤:", error);
@@ -240,38 +247,20 @@ function ScenarioDetail() {
 
   return (
     <div className="scenario-detail-container">
-
-      {/* 左上角：標題區（Logo + 文案） */}
+      {/* 左上角：標題區 */}
       <div className="every-title-area">
-        <img
-          src="/images/heart-hand.png"
-          alt="手語愛心"
-          className="every-heart-hand"
-        />
+        <img src="/images/heart-hand.png" alt="手語愛心" className="every-heart-hand" />
         <h1>生聲 — 情景模擬</h1>
       </div>
-
       <h2>{currentScenario.title}</h2>
 
-      {/* 主要內容：左(圖片區+地點選擇) 中(相似度) 右(AI嘴型) */}
       <div className="scenario-content">
-
-        {/* 左側圖片區 + 對話框 */}
+        {/* 左側：圖片與對話框 */}
         <div className="scenario-images">
-          <img
-            src={locationImages[0]}
-            alt="場景圖1"
-            className="scenario-img"
-          />
-
+          <img src={locationImages[0]} alt="場景圖1" className="scenario-img" />
           <div className="dialog-image-container">
-            <img
-              src={locationImages[1]}
-              alt="場景圖2"
-              className="scenario-img"
-            />
+            <img src={locationImages[1]} alt="場景圖2" className="scenario-img" />
           </div>
-          {/* 若已隨機出句子，就在泡泡顯示文字 */}
           {currentLineObj && (
             <div className="dialog-bubble">
               {currentLineObj.text}
@@ -279,25 +268,28 @@ function ScenarioDetail() {
           )}
         </div>
 
-        {/* 中間區 - 相似度 / 提示 */}
+        {/* 中間：評估結果與建議 */}
         <div className="scenario-middle">
-          <p>{similarity}</p>
+          <p className="evaluation-text">{similarity}</p>
           {advice && (
-            <p>
+            <p className="advice-text">
               <span className="advice-label">建議：</span>
-              <span className="advice-text">{advice}</span>
+              <span>{advice}</span>
             </p>
           )}
           {similarity === "" && advice === "" && <p>{currentScenario.tip}</p>}
         </div>
 
-        {/* 右側 - AI 嘴型對照 */}
+        {/* 右側：AI 口型對照 - 使用 mp4 影片 */}
         <div className="scenario-ai">
           {currentLineObj ? (
-            <img
-              src={currentLineObj.mouthGif}
-              alt="嘴型GIF"
+            <video
+              ref={videoRef}
               className="ai-face"
+              src={currentLineObj.mouthVideo}
+              autoPlay
+              loop
+              controls
             />
           ) : (
             <div style={{ width: 200, height: 200, background: "#eee" }} />
@@ -305,24 +297,15 @@ function ScenarioDetail() {
         </div>
       </div>
 
-      {/* 地點下拉 + 隨機句子按鈕 */}
+      {/* 下方：選擇地點與隨機句子按鈕 */}
       <div className="location-controls">
-        <label htmlFor="locationSelect">
-          選擇地點：
-        </label>
-        <select
-          id="locationSelect"
-          value={selectedLocation}
-          onChange={handleLocationChange}
-        >
+        <label htmlFor="locationSelect">選擇地點：</label>
+        <select id="locationSelect" value={selectedLocation} onChange={handleLocationChange}>
           <option value="">請選擇</option>
           {Object.keys(currentScenario.locations).map((loc) => (
-            <option key={loc} value={loc}>
-              {loc}
-            </option>
+            <option key={loc} value={loc}>{loc}</option>
           ))}
         </select>
-
         <button onClick={getRandomLine} disabled={!selectedLocation}>
           ▶ 開始
         </button>
@@ -330,18 +313,13 @@ function ScenarioDetail() {
 
       {/* 錄音按鈕 */}
       <div className="scenario-controls">
-        <button
-          className={`record-btn ${isRecording ? 'recording' : ''}`}
-          onClick={toggleRecording}
-        >
-          <span className="record-text">
-            {isRecording ? "停止" : "錄音"}
-          </span>
+        <button className={`record-btn ${isRecording ? 'recording' : ''}`} onClick={toggleRecording}>
+          <span className="record-text">{isRecording ? "停止" : "錄音"}</span>
           <FaMicrophone className="microphone-icon" />
         </button>
       </div>
 
-      {/* 回到情景模擬首頁 */}
+      {/* 返回按鈕 */}
       <Link to="/scenario" className="go-back-button">回上一頁</Link>
     </div>
   );

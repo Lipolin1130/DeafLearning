@@ -1,118 +1,176 @@
 .chat-container {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    height: calc(100vh - 60px);
-    margin-top: 60px;
-    background-color: #FCE7DA;
-  }
-  
-  .chat-box {
-    width: 90%;
-    max-width: 800px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 16px;
-    position: relative;
-    border: 4px solid #b8a390;
-  }
-  
-  /* .back-button {
-    position: absolute;
-    top: 16px;
-    left: 16px;
-    color: gray;
-    text-decoration: none;
-  } */
-  
-  .chat-title {
-    text-align: center;
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 16px;
-    color: #463030;
-  }
-  
-  .chat-messages {
-    max-height: 350px;
-    overflow-y: auto;
-    padding: 10px;
-    border: 2px solid #b8a390;
-    border-radius: 10px;
-    background: #fefff0;
-  }
-  
-  .message {
-    display: flex;
-    align-items: center;
-    margin-bottom: 12px;
-  }
-  
-  .message.ai {
-    justify-content: flex-start;
-  }
-  
-  .message.user {
-    justify-content: flex-end;
-  }
-  
-  .avatar {
-    font-size: 1.5rem;
-    margin-right: 8px;
-  }
-  
-  .audio-player {
-    width: 150px;
-    border-radius: 5px;
-    /* border: 1px solid #c4a484;
-    background: #f8ead6; */
-    padding: 4px;
-  }
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  height: calc(100vh - 60px);
+  margin-top: 60px;
+  background-color: #FCE7DA;
+}
 
-  .book-icon {
-    margin-left: 8px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.2rem;
-  }
-  
-  .chat-controls {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    margin-top: 15px;
-    background: #fefff0;
-    border: 2px solid #b8a390;
-    padding: 15px;
-    border-radius: 10px;
-    width: 100%;
-  }
-  
-  .icon-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.5rem;
-    padding: 8px;
-  }
-  
-  .record-button {
-    background: red;
-    color: white;
-    padding: 12px;
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: bold;
-  }
+/* ---- 聊天框 ---- */
+.chat-box {
+  background-color: #ffffff;
+  border: 5px solid #887e75;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  padding: 1rem;
+  box-sizing: border-box;
+}
 
-  .record-button.active {
-    background: darkred;
-  }
-  
+/* 左上角返回箭頭 (FaArrowLeft) */
+.back-button {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  color: #333;
+  text-decoration: none;
+}
+
+/* 標題：AI 導師，置中 */
+.chat-title {
+  text-align: center;
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 可放在右上角的視訊與電話圖示 */
+.camera-button {
+  position: absolute;
+  top: 1rem;
+  right: 3rem;
+  color: #333;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.phone-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  color: #333;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+/* ---- 聊天訊息清單 ---- */
+.chat-messages {
+  width: 100%;
+  box-sizing: border-box;
+  border: 5px solid #887e75;
+  border-radius: 5px;
+  padding: 1rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+/* 空訊息提示 */
+.empty-message {
+  text-align: center;
+  color: #333;
+  font-size: 1.3rem;
+  padding: 1.5rem;
+  font-weight: bold;
+}
+
+/* ---- 單則訊息 ---- */
+.message {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  position: relative;
+  width: 100%;
+}
+
+/* AI 在左側 */
+.message.ai {
+  justify-content: flex-start;
+  flex-direction: row;
+}
+
+/* 使用者在右側 */
+.message.user {
+  /* justify-content: flex-end; */
+  flex-direction: row-reverse;
+}
+
+.message.ai .avatar {
+  font-size: 1.8rem;
+  margin-right: 0.5rem;
+}
+
+.message.user .avatar {
+  font-size: 1.8rem;
+  margin-left: 0.5rem;
+}
+
+.audio-player {
+  width: 300px; /* 可視需要調整 */
+}
+
+/* 整個控制面板的背景（可視需要移除或修改） */
+.audio-player::-webkit-media-controls-panel {
+  background-color: #eee;
+}
+
+/* ---- 底部控制按鈕列 ---- */
+.chat-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+/* 拍照、表情符號等 icon */
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+}
+
+/* 錄音按鈕：點擊 */
+.record-button {
+  background-color: #ffffff;
+  border: 0px;
+  padding-top: 0.5rem;
+  cursor: pointer;
+  color: #ff3333;
+  transition: transform 0.2s ease;
+}
+
+.record-button:hover {
+  color: #d00000;
+  transform: scale(1.2);
+}
+
+/* ---- 書本圖示 (若要顯示文字轉語音結果) ---- */
+.book-icon {
+  background-color: #aaaaaa;
+  border: none;
+  border-radius: 10px;
+  padding: 0.5rem 0.5rem;
+  cursor: pointer;
+  margin-left: 0.5rem;
+  color: #ffffff;
+  transition: background-color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+.book-icon:hover {
+  background-color: #555;
+}

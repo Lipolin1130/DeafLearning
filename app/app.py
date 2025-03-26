@@ -4,6 +4,7 @@ import time
 # import Levenshtein
 # import openai  # GPT 相關部分（未使用可保留或刪除）
 import requests  # 呼叫外部 API
+import re
 from pydub import AudioSegment  # 轉換音訊檔
 from flask import Flask, request, jsonify
 from werkzeug.utils import secure_filename
@@ -69,7 +70,6 @@ def analyze():
         # 4. 使用 pydub 將錄音檔轉換成標準 PCM WAV 格式（單聲道、16位元、16kHz）
         try:
             audio = AudioSegment.from_file(temp_path)
-            # 設置單聲道、16位元、16kHz
             audio = audio.set_channels(1).set_frame_rate(16000).set_sample_width(2)
             converted_filename = f"converted_{temp_filename}"
             converted_path = os.path.join(temp_dir, converted_filename)
@@ -84,6 +84,7 @@ def analyze():
         # 5. 呼叫外部評估 API，使用轉換後的檔案
         with open(converted_path, "rb") as f:
             files = {"audio": (filename, f, "audio/wav")}
+            # 根據文件要求，參數名稱為 "text"
             data = {"text": target_text}
             eval_response = requests.post("http://140.134.25.53:8081/api/evaluate/", files=files, data=data)
         print("評估 API 回傳狀態碼:", eval_response.status_code)
@@ -99,6 +100,7 @@ def analyze():
             return jsonify({"error": f"評估 API 回傳錯誤，狀態碼：{eval_response.status_code}"}), 400
 
         eval_data = eval_response.json()
+        # 組合評估結果，每項分數換行呈現
         evaluation_str = (
             f"準確度: {eval_data.get('accuracy_score', 'N/A')}%\n"
             f"流暢度: {eval_data.get('fluency_score', 'N/A')}%\n"
@@ -108,22 +110,18 @@ def analyze():
         if eval_data.get("errors"):
             evaluation_str += "\n錯誤資訊: " + str(eval_data.get("errors"))
 
-        # # 7. 使用 GPT 根據評估結果生成更精準的建議
-        # gpt_prompt = f"根據以下評估結果，請提出具體的發音改進建議：\n{evaluation_str}\n請用2-3句中文回答。"
-        # chat_resp = openai.ChatCompletion.create(
-        #     model="gpt-3.5-turbo",  # 若有 GPT-4 權限，可改為 "gpt-4"
-        #     messages=[
-        #         {"role": "system", "content": "你是一位專業的中文發音老師。"},
-        #         {"role": "user", "content": gpt_prompt}
-        #     ],
-        #     temperature=0.7
-        # )
-        # gpt_advice = chat_resp["choices"][0]["message"]["content"].strip()
+        # 7. 根據文件，評估 API 應回傳 suggestion (string)
+        suggestion = eval_data.get("suggestion", "")
+        if suggestion:
+            import re
+            suggestion = re.sub(r'[#*]', '', suggestion).strip()
+        else:
+            suggestion = "無建議資訊。"
 
         # 8. 回傳 JSON 結果
         return jsonify({
             "evaluation": evaluation_str,
-            # "advice": gpt_advice,
+            "advice": suggestion,
             "raw": eval_data
         })
 
@@ -131,42 +129,39 @@ def analyze():
         print("分析時發生錯誤:", e)
         return jsonify({"error": str(e)}), 500
 
-# 以下為「自由活動」功能
-# if not os.path.exists("model"):
-#     raise Exception("請下載中文 Vosk 模型並放置在 'model' 資料夾中，參考：https://alphacephei.com/vosk/models")
-# model = Model("model")
+# 以下為「自由對話」功能
+# 定義 EchoLearn API 的基本 URL（請依您的實際部署調整）
+ECHOLEARN_API_BASE = "http://140.134.25.53:8081/api"
 
-@app.route('/speech-to-text', methods=['POST'])
+# 1. 語音轉文字 API
+@app.route('/speech_to_text', methods=['POST'])
 def speech_to_text():
     if 'audio' not in request.files:
         return jsonify({'error': '沒有上傳音訊檔案'}), 400
 
     audio_file = request.files['audio']
-    audio_bytes = audio_file.read()
+    filename = secure_filename(audio_file.filename)
+    files = {
+        'audio': (filename, audio_file.stream, audio_file.mimetype)
+    }
+    
+    # 呼叫 EchoLearn API 的語音辨識端點
+    stt_url = f"{ECHOLEARN_API_BASE}/speech_to_text/"
     try:
-        wf = wave.open(io.BytesIO(audio_bytes), "rb")
+        resp = requests.post(stt_url, files=files)
+        if resp.status_code == 200:
+            data = resp.json()
+            # 回傳辨識結果，例如 {"text": "使用者的語音內容轉換後的文字"}
+            return jsonify(data)
+        else:
+            return jsonify({
+                'error': f'後端語音辨識失敗，狀態碼: {resp.status_code}',
+                'response': resp.text
+            }), 500
     except Exception as e:
-        return jsonify({'error': f'無法讀取音訊檔案: {e}'}), 400
+        return jsonify({'error': f'呼叫後端語音辨識失敗: {str(e)}'}), 500
 
-    if wf.getnchannels() != 1 or wf.getsampwidth() != 2 or wf.getcomptype() != "NONE":
-        return jsonify({'error': '音訊格式不正確，請使用單聲道、16位元、無壓縮的 wav 檔案'}), 400
-
-    rec = KaldiRecognizer(model, wf.getframerate())
-    result_text = ""
-    while True:
-        data = wf.readframes(4000)
-        if len(data) == 0:
-            break
-        if rec.AcceptWaveform(data):
-            res = json.loads(rec.Result())
-            result_text += res.get("text", "") + " "
-    res = json.loads(rec.FinalResult())
-    result_text += res.get("text", "")
-    result_text = result_text.strip()
-    if not result_text:
-        result_text = "無法辨識語音"
-    return jsonify({'text': result_text})
-
+# 2. AI 回應生成 API
 @app.route('/ai-response', methods=['POST'])
 def ai_response():
     data = request.get_json()
@@ -174,16 +169,33 @@ def ai_response():
         return jsonify({'error': '沒有提供文字內容'}), 400
 
     user_text = data['text']
+    # 這裡先以 placeholder 生成 AI 回應，未來可整合 GPT 模型
     ai_text = f"你剛才說的是：{user_text}"
+    
+    # 呼叫 EchoLearn API 的文字轉語音端點
+    # 假設該端點為 GET /generate/tts/，並以 query parameter 傳入文字
+    tts_url = f"{ECHOLEARN_API_BASE}/generate/tts/"
+    params = {'text': ai_text}
     try:
-        tts = gTTS(ai_text, lang='zh-tw')
-        filename = f"static/audio/{uuid.uuid4().hex}.mp3"
-        os.makedirs(os.path.dirname(filename), exist_ok=True)
-        tts.save(filename)
+        tts_resp = requests.get(tts_url, params=params)
+        if tts_resp.status_code == 200:
+            # 取得 TTS 產生的音檔（假設回傳內容為 wav 檔）
+            static_dir = os.path.join(os.getcwd(), "static", "audio")
+            os.makedirs(static_dir, exist_ok=True)
+            audio_filename = f"{uuid.uuid4().hex}.wav"
+            audio_path = os.path.join(static_dir, audio_filename)
+            with open(audio_path, 'wb') as f:
+                f.write(tts_resp.content)
+        else:
+            return jsonify({
+                'error': f'後端TTS轉換失敗，狀態碼: {tts_resp.status_code}',
+                'response': tts_resp.text
+            }), 500
     except Exception as e:
-        return jsonify({'error': f'文字轉語音失敗: {e}'}), 500
+        return jsonify({'error': f'呼叫後端TTS轉換失敗: {str(e)}'}), 500
 
-    audio_url = request.host_url + filename
+    # 組合語音檔 URL，讓前端可直接存取
+    audio_url = request.host_url + f"static/audio/{audio_filename}"
     return jsonify({'text': ai_text, 'audio': audio_url})
 
 if __name__ == '__main__':
