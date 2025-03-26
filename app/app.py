@@ -20,7 +20,7 @@ import uuid
 import io
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["http://140.134.25.53:3000"])
 
 # # 設定 OpenAI API 金鑰（若有使用 GPT 部分，請確保在 .env 或環境變數中設定 OPENAI_API_KEY）
 # openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -199,4 +199,4 @@ def ai_response():
     return jsonify({'text': ai_text, 'audio': audio_url})
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5000, host='0.0.0.0')

@@ -2,7 +2,7 @@
 FROM node:18-slim
 
 # 設定工作目錄
-# WORKDIR /app
+WORKDIR /src
 
 # 複製 package.json 和 package-lock.json
 COPY package*.json ./

@@ -223,7 +223,7 @@ function ScenarioDetail() {
       formData.append("file", audioBlob, `_userAudio.wav`);
       formData.append("text", currentLineObj.text);
 
-      const res = await fetch("http://localhost:5000/api/analyze", {
+      const res = await fetch("http://140.134.25.53:5000/api/analyze", {
         method: "POST",
         body: formData
       });
