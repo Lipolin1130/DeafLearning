@@ -1,10 +1,4 @@
-/* 1. 全局樣式 */
-body {
-  /* font-family: "Klee One", "Noto Sans TC", sans-serif; */
-  background-color: #FCE7DA; /* 淡粉色背景 */
-}
-
-/* 2. 整體容器 */
+/* 1. 整體容器 */
 .scenario-detail-container {
   position: relative;
   display: flex;
@@ -14,9 +8,10 @@ body {
   padding: 2rem;
   height: calc(100vh - 60px);
   margin-top: 60px;
+  background-color: #FCE7DA;
 }
 
-/* 3. 主要內容區塊 */
+/* 2. 主要內容區塊 */
 .scenario-content {
   display: flex;
   justify-content: space-between;
@@ -25,7 +20,7 @@ body {
   margin-top: 1rem;
 }
 
-/* 4. 左側 - 圖片區 */
+/* 3. 左側 - 圖片區 */
 .scenario-images {
   display: flex;
   flex-direction: column;
@@ -42,7 +37,7 @@ body {
   border: 4px solid #333;
 }
 
-/* 5. 中間 - 文字 & 相似度區 */
+/* 4. 中間 - 文字 & 相似度區 */
 .scenario-middle {
   width: 30%;
   display: flex;
@@ -84,7 +79,7 @@ body {
   font-weight: bold;
 }
 
-/* 6. 右側 - AI 口型對照 */
+/* 5. 右側 - AI 口型對照 */
 .scenario-ai {
   width: 30%;
   display: flex;
@@ -115,7 +110,7 @@ body {
   font-size: 0.9rem;
 }
 
-/* 7. 錄音按鈕 */
+/* 6. 錄音按鈕 */
 .record-btn {
     display: flex;
     align-items: center;
@@ -151,7 +146,7 @@ body {
     font-size: 1rem;
   }
 
-/* 8. 返回按鈕 */
+/* 7. 返回按鈕 */
 .go-back-button {
   position: absolute;
   top: 20px;
@@ -172,7 +167,7 @@ body {
     color: #de5b5b;
   }
 
-/* 9. 播放速度設定選單
+/* 播放速度設定選單
 .play-speed-menu {
   position: absolute;
   top: 50px;

@@ -6,6 +6,7 @@ import time
 import requests  # 呼叫外部 API
 import re
 from pydub import AudioSegment  # 轉換音訊檔
+import urllib.parse  # 新增：用於 URL 編碼
 from flask import Flask, request, jsonify
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
@@ -14,9 +15,9 @@ from flask_cors import CORS
 # load_dotenv()  # 讀取專案根目錄下的 .env 檔案
 
 # from vosk import Model, KaldiRecognizer
+# from gtts import gTTS
 import wave, json
 import uuid
-# from gtts import gTTS
 import io
 
 app = Flask(__name__)
@@ -130,11 +131,26 @@ def analyze():
         return jsonify({"error": str(e)}), 500
 
 # 以下為「自由對話」功能
-# 定義 EchoLearn API 的基本 URL（請依您的實際部署調整）
+# 設定後端 EchoLearn API 的 Base URL
 ECHOLEARN_API_BASE = "http://140.134.25.53:8081/api"
 
-# 1. 語音轉文字 API
-@app.route('/speech_to_text', methods=['POST'])
+def clean_audio_folder(folder, max_age_seconds=300):
+    """
+    刪除資料夾中修改時間超過 max_age_seconds 秒的檔案。
+    """
+    now = time.time()
+    for filename in os.listdir(folder):
+        file_path = os.path.join(folder, filename)
+        if os.path.isfile(file_path):
+            file_age = now - os.path.getmtime(file_path)
+            if file_age > max_age_seconds:
+                try:
+                    os.remove(file_path)
+                    print(f"Deleted old audio file: {file_path}")
+                except Exception as e:
+                    print(f"Error deleting file {file_path}: {e}")
+
+@app.route('/speech-to-text', methods=['POST'])
 def speech_to_text():
     if 'audio' not in request.files:
         return jsonify({'error': '沒有上傳音訊檔案'}), 400
@@ -145,13 +161,12 @@ def speech_to_text():
         'audio': (filename, audio_file.stream, audio_file.mimetype)
     }
     
-    # 呼叫 EchoLearn API 的語音辨識端點
+    # 呼叫後端 API 的語音辨識端點
     stt_url = f"{ECHOLEARN_API_BASE}/speech_to_text/"
     try:
         resp = requests.post(stt_url, files=files)
         if resp.status_code == 200:
             data = resp.json()
-            # 回傳辨識結果，例如 {"text": "使用者的語音內容轉換後的文字"}
             return jsonify(data)
         else:
             return jsonify({
@@ -161,7 +176,6 @@ def speech_to_text():
     except Exception as e:
         return jsonify({'error': f'呼叫後端語音辨識失敗: {str(e)}'}), 500
 
-# 2. AI 回應生成 API
 @app.route('/ai-response', methods=['POST'])
 def ai_response():
     data = request.get_json()
@@ -169,17 +183,54 @@ def ai_response():
         return jsonify({'error': '沒有提供文字內容'}), 400
 
     user_text = data['text']
-    # 這裡先以 placeholder 生成 AI 回應，未來可整合 GPT 模型
-    ai_text = f"你剛才說的是：{user_text}"
+    print("Received chat prompt:", user_text)
     
-    # 呼叫 EchoLearn API 的文字轉語音端點
-    # 假設該端點為 GET /generate/tts/，並以 query parameter 傳入文字
+    # 傳送給 /chat/response/ API 的參數：使用 query parameter chat_prompt
+    payload = {"chat_prompt": user_text}
+    ai_url = f"{ECHOLEARN_API_BASE}/chat/response/"
+    try:
+        # 僅傳送 query 參數
+        resp = requests.post(ai_url, params=payload)
+        print("chat/response/ status code:", resp.status_code)
+        print("chat/response/ response text:", resp.text)
+        if resp.status_code in [200, 201]:
+            ai_response_data = resp.json()
+            print("chat/response/ returned JSON:", ai_response_data)
+            # 檢查回傳內容：先看 "text"，若不存在則檢查 "response"
+            if "text" in ai_response_data and ai_response_data["text"].strip():
+                ai_text = ai_response_data["text"]
+            elif "response" in ai_response_data and ai_response_data["response"].strip():
+                ai_text = ai_response_data["response"]
+            else:
+                return jsonify({'error': '後端 AI 未返回有效回應'}), 500
+        else:
+            return jsonify({
+                'error': f'後端 AI 回應失敗，狀態碼: {resp.status_code}',
+                'response': resp.text
+            }), 500
+    except Exception as e:
+        return jsonify({'error': f'呼叫後端 AI 回應失敗: {str(e)}'}), 500
+
+    # 移除 # 與 * 符號
+    ai_text = re.sub(r'[#*]', '', ai_text).strip()
+    # 移除常見 emoji（例如表情符號）
+    emoji_pattern = re.compile("[" 
+                               u"\U0001F600-\U0001F64F"  # emoticons
+                               u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+                               u"\U0001F680-\U0001F6FF"  # transport & map symbols
+                               u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+                               "]+", flags=re.UNICODE)
+    ai_text = emoji_pattern.sub(r'', ai_text).strip()
+    # 新增：移除換行符號，避免 TTS API 因格式問題失敗
+    ai_text = ai_text.replace("\n", " ").replace("\r", " ").strip()
+    print("AI text after cleaning:", ai_text)
+
+    # 呼叫後端 API 取得文字轉語音（TTS）的音檔
     tts_url = f"{ECHOLEARN_API_BASE}/generate/tts/"
     params = {'text': ai_text}
     try:
         tts_resp = requests.get(tts_url, params=params)
         if tts_resp.status_code == 200:
-            # 取得 TTS 產生的音檔（假設回傳內容為 wav 檔）
             static_dir = os.path.join(os.getcwd(), "static", "audio")
             os.makedirs(static_dir, exist_ok=True)
             audio_filename = f"{uuid.uuid4().hex}.wav"
@@ -194,7 +245,6 @@ def ai_response():
     except Exception as e:
         return jsonify({'error': f'呼叫後端TTS轉換失敗: {str(e)}'}), 500
 
-    # 組合語音檔 URL，讓前端可直接存取
     audio_url = request.host_url + f"static/audio/{audio_filename}"
     return jsonify({'text': ai_text, 'audio': audio_url})
 

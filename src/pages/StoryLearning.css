@@ -1,0 +1,84 @@
+  .story-learning-container {
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 60px); /* 扣除頂部導航60px */
+    margin-top: 60px;           /* 避免被 fixed header 蓋住 */
+    background: url('../assets/home.png') center/cover no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .story-learning-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(225, 215, 190, 0.7); /* 淡黃色遮罩，透明度 50% */
+    z-index: 1; /* 確保遮罩在背景上，但不影響其他內容 */
+  }
+  .story-learning-container > * {
+    position: relative;
+    z-index: 2;
+  }
+
+  .every-title-area {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-radius: 8px;
+    z-index: 10;
+  }
+
+  .every-heart-hand {
+    width: 50px;
+    height: auto;
+    margin-right: 0rem;
+  }
+
+  .every-title-area h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    text-shadow: 0.5px 0.5px 0px rgba(0, 0, 0, 0.3); /* 增強粗體感 */
+  }
+
+  .classic-story {
+    display: flex;
+    flex-direction: row;
+    gap: 125px;
+  }
+  
+  .story-button {
+    padding: 12px 24px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #463030;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 12px;
+    text-decoration: none;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .story-button:hover {
+    color: #d9534f;
+    transform: scale(1.1);
+  }
+
+  .description-container {
+    width: 100%;
+    position: absolute;
+    bottom: 35%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.5rem;
+    color: black;
+    text-shadow: 0.55px 0.55px 0px rgba(0, 0, 0, 1); /* 增強粗體感 */
+    text-align: center;
+  }
+

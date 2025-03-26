@@ -20,6 +20,17 @@ import mouthVideo8 from '../assets/mouth8.mp4';
 // import mouthVideo9 from '../assets/mouth9.mp4';
 import mouthVideo10 from '../assets/mouth10.mp4';
 
+import mouthVideo11 from '../assets/mouth11.mp4';
+import mouthVideo12 from '../assets/mouth12.mp4';
+import mouthVideo13 from '../assets/mouth13.mp4';
+import mouthVideo14 from '../assets/mouth14.mp4';
+import mouthVideo15 from '../assets/mouth15.mp4';
+import mouthVideo16 from '../assets/mouth16.mp4';
+import mouthVideo17 from '../assets/mouth17.mp4';
+import mouthVideo18 from '../assets/mouth18.mp4';
+import mouthVideo19 from '../assets/mouth19.mp4';
+import mouthVideo20 from '../assets/mouth20.mp4';
+
 // 示範：地點用不同圖片
 import classroomImg1 from '../assets/classroom1.png';
 import classroomImg2 from '../assets/classroom2.jpeg';
@@ -48,21 +59,21 @@ const scenarioData = {
           { text: "下課要不要一起去福利社買東西？", mouthVideo: mouthVideo10 }
         ]
       },
-      // "操場": {
-      //   images: [playgroundImg1, playgroundImg2],
-      //   lines: [
-      //     { text: "可以借我一顆球嗎？", mouthVideo: mouthVideo11 },
-      //     { text: "小心！球飛過來了！", mouthVideo: mouthVideo12 },
-      //     { text: "我可以加入你們的隊伍嗎？", mouthVideo: mouthVideo13 },
-      //     { text: "太熱了，我要休息一下。", mouthVideo: mouthVideo14 },
-      //     { text: "這裡有長椅，我們坐一下吧！", mouthVideo: mouthVideo15 },
-      //     { text: "我的鞋帶鬆了。", mouthVideo: mouthVideo16 },
-      //     { text: "小心別摔倒，地上有點濕滑！", mouthVideo: mouthVideo17 },
-      //     { text: "我們換個地方玩吧！", mouthVideo: mouthVideo18 },
-      //     { text: "我們還差一個人才能比賽。", mouthVideo: mouthVideo19 },
-      //     { text: "我不太會踢足球，你可以教我嗎？", mouthVideo: mouthVideo20 }
-      //   ]
-      // },
+      "操場": {
+        images: [playgroundImg1, playgroundImg2],
+        lines: [
+          { text: "可以借我一顆球嗎？", mouthVideo: mouthVideo11 },
+          { text: "小心！球飛過來了！", mouthVideo: mouthVideo12 },
+          { text: "可以加入你們的隊伍嗎？", mouthVideo: mouthVideo13 },
+          { text: "太熱了，我要休息一下。", mouthVideo: mouthVideo14 },
+          { text: "這裡有長椅，我們坐一下吧！", mouthVideo: mouthVideo15 },
+          { text: "我的鞋帶鬆了。", mouthVideo: mouthVideo16 },
+          { text: "小心別摔倒，地上有點濕滑！", mouthVideo: mouthVideo17 },
+          { text: "我們換個地方玩吧！", mouthVideo: mouthVideo18 },
+          { text: "我們還差一個人才能比賽。", mouthVideo: mouthVideo19 },
+          { text: "我不太會踢足球，你可以教我嗎？", mouthVideo: mouthVideo20 }
+        ]
+      },
       // "保健室": {
       //   images: [healthOfficeImg1, healthOfficeImg2],
       //   lines: [

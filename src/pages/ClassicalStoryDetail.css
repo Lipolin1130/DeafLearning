@@ -1,0 +1,110 @@
+/* 1. 最外層容器：使用 Flex 進行左右分欄 */
+.story-detail-container {
+  position: relative;
+  display: flex;            /* 開啟 Flexbox */
+  flex-direction: row;      /* 左右並排 */
+  justify-content: space-between;
+  align-items: flex-start;  /* 元素對齊到容器頂部，若要置中可改 center */
+  width: 100%;
+  height: calc(100vh - 60px);
+  margin-top: 60px;
+  box-sizing: border-box;
+  background-color: #faefe5; /* 可依需求調整或移除 */
+  overflow: hidden;
+}
+
+/* 2. 左上角標題區域（含圖示與主標題） */
+.every-title-area {
+  position: absolute;  /* 固定在容器左上角 */
+  top: 0px;
+  left: 0px;
+  display: flex;
+  align-items: center;
+  z-index: 999;        /* 確保不被其他元素蓋住 */
+}
+
+.every-heart-hand {
+  width: 50px;
+  height: auto;
+  margin-right: 0rem;
+}
+
+.every-title-area h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0; /* 移除預設 margin，避免跑版 */
+  text-shadow: 0.5px 0.5px 0px rgba(0, 0, 0, 0.3); /* 增強粗體感 */
+}
+
+/* 3. 故事標題 (h2) 的基本樣式，可視需求調整位置 */
+.story-title {
+  position: absolute;
+  top: 80px;
+  left: 5.5%;
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* 4. 左側故事內容區（圖片 + 文字） */
+.story-container {
+  flex: 0 0 60%;     /* 左側佔 65% 的寬度，可自行調整 */
+  position: relative;
+  top: 93px;
+  margin-left: 60px;
+  padding: 20px;     /* 與容器邊緣留些距離 */
+  box-sizing: border-box;
+}
+
+/* 4-1. 圖片樣式 */
+.story-image {
+  width: 90%;
+  height: auto;
+  display: center;
+  border: 6px solid #bcbbbbe1;
+  border-radius: 12px;
+  margin-bottom: 10px;  /* 圖片與文字間的間距 */
+}
+
+/* 4-2. 故事文字（字幕） */
+.story-line {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #333;
+  line-height: 1.4;
+  font-weight: bold;
+  font-family: sans-serif;
+}
+
+/* 5. 右側 AI 區塊 */
+.ai-section {
+  flex: 0 0 30%;       /* 右側佔 30% 的寬度，可自行調整 */
+  margin-top: 40px;
+  margin-right: 70px;
+  padding: 50px;
+  box-sizing: border-box;
+  border: 2px solid #cccccc00;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.ai-section h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.ai-section video {
+  width: 100%;
+  max-width: 280px; /* 避免影片過大，可自行調整 */
+  border-radius: 8px;
+  outline: none;
+}
+
+/* 可點擊的文字 */
+.clickable-word {
+  color: #d91313;
+  cursor: pointer;
+  text-decoration: none;
+}
