@@ -1,0 +1,36 @@
+  .testtt {
+    display: flex;
+  }
+
+  .testtt {
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 60px);
+    margin-top: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .every-title-area {
+    position: absolute;
+    top: 0px; /* 確保不被 fixed header 擋住 */
+    left: 0px;
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-radius: 8px;
+    z-index: 10; /* 提高層級，避免被 header 蓋住 */
+  }
+  
+  .every-heart-hand {
+    width: 50px;
+    height: auto;
+    margin-right: 0rem;
+  }
+  
+  .every-title-area h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    text-shadow: 0.5px 0.5px 0px rgba(0, 0, 0, 0.3); /* 增強粗體感 */
+  }

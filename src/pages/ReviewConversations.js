@@ -50,7 +50,7 @@ const ReviewConversations = () => {
       {/* 可選：全部刪除按鈕 */}
       {conversations.length > 0 && (
         <div style={{ textAlign: "center", margin: "1rem 0" }}>
-          <button onClick={handleClearAll}>刪除全部紀錄</button>
+          <button className="clear-button" onClick={handleClearAll}>刪除全部紀錄</button>
         </div>
       )}
 
@@ -74,9 +74,11 @@ const ReviewConversations = () => {
               conversations.map((conv, index) => (
                 <tr key={index}>
                   <td>{conv.date}</td>
-                  <td>{conv.content}</td>
+                  <td dangerouslySetInnerHTML={{ __html: conv.content }}></td>
                   <td>
-                    <button onClick={() => handleDelete(index)}>刪除</button>
+                    <button className="delete-button" onClick={() => handleDelete(index)}>
+                      刪除
+                    </button>
                   </td>
                 </tr>
               ))

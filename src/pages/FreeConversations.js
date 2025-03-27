@@ -1,26 +1,70 @@
 import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import {
-  FaMicrophone,
-  FaArrowLeft,
-  FaCamera,
-  FaPhone,
-  FaBook,
-} from "react-icons/fa";
+import { FaMicrophone, FaArrowLeft, FaBook } from "react-icons/fa";
 import "./FreeConversations.css";
+
+// Helper: 將字串寫入 DataView
+function writeString(view, offset, string) {
+  for (let i = 0; i < string.length; i++) {
+    view.setUint8(offset + i, string.charCodeAt(i));
+  }
+}
+
+// Helper: 將 AudioBuffer 編碼成 WAV Blob（16-bit PCM）
+function encodeWAV(audioBuffer) {
+  const numChannels = audioBuffer.numberOfChannels;
+  const sampleRate = audioBuffer.sampleRate;
+  const format = 1; // PCM
+  const bitsPerSample = 16;
+  const blockAlign = numChannels * bitsPerSample / 8;
+  const byteRate = sampleRate * blockAlign;
+  const samples = audioBuffer.length;
+  const dataSize = samples * blockAlign;
+  const buffer = new ArrayBuffer(44 + dataSize);
+  const view = new DataView(buffer);
+
+  // 撰寫 WAV 標頭
+  writeString(view, 0, "RIFF");
+  view.setUint32(4, 36 + dataSize, true);
+  writeString(view, 8, "WAVE");
+  writeString(view, 12, "fmt ");
+  view.setUint32(16, 16, true);
+  view.setUint16(20, format, true);
+  view.setUint16(22, numChannels, true);
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, byteRate, true);
+  view.setUint16(32, blockAlign, true);
+  view.setUint16(34, bitsPerSample, true);
+  writeString(view, 36, "data");
+  view.setUint32(40, dataSize, true);
+
+  let offset = 44;
+  const channelData = [];
+  for (let ch = 0; ch < numChannels; ch++) {
+    channelData.push(audioBuffer.getChannelData(ch));
+  }
+  for (let i = 0; i < samples; i++) {
+    for (let ch = 0; ch < numChannels; ch++) {
+      let sample = channelData[ch][i];
+      sample = Math.max(-1, Math.min(1, sample));
+      view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7FFF, true);
+      offset += 2;
+    }
+  }
+  return new Blob([view], { type: "audio/wav" });
+}
 
 const FreeConversations = () => {
   const [messages, setMessages] = useState([]);
   const [recording, setRecording] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalText, setModalText] = useState("");
 
-  // 用於錄音
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
 
-  // 後端 API URL (請依照實際部署調整)
-  const BASE_URL = "http://140.134.25.53:8081/api";
+  const BASE_URL = "http://localhost:5000";
 
-  // 開始 / 停止錄音
   const handleRecord = async () => {
     if (!recording) {
       setRecording(true);
@@ -37,44 +81,38 @@ const FreeConversations = () => {
         };
 
         mediaRecorder.onstop = async () => {
-          const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
-          const audioUrl = URL.createObjectURL(audioBlob);
+          const rawBlob = new Blob(audioChunksRef.current);
+          const arrayBuffer = await rawBlob.arrayBuffer();
+          const audioContext = new AudioContext();
+          const decodedAudio = await audioContext.decodeAudioData(arrayBuffer);
+          const wavBlob = encodeWAV(decodedAudio);
+          const audioUrl = URL.createObjectURL(wavBlob);
 
-          // 1. 在前端顯示使用者剛錄好的語音訊息 (type: 'user')
           setMessages((prev) => [
             ...prev,
-            {
-              type: "user",
-              audio: audioUrl,
-            },
+            { type: "user", audio: audioUrl }
           ]);
 
-          // 2. 語音轉文字：呼叫後端 /speech_to_text/ API
-          const sttText = await convertSpeechToText(audioBlob);
+          const sttText = await convertSpeechToText(wavBlob);
 
-          // 3. AI 生成回應 (Placeholder)
-          const aiText = await getAiResponse(sttText);
+          if (sttText === "無法辨識語音" || sttText === "語音辨識失敗") {
+            openModal("語音辨識失敗，請確認麥克風設定或再試一次！");
+            return;
+          }
 
-          // 4. 呼叫文字轉語音 API，取得 AI 的語音回覆
-          const aiAudioUrl = await getTtsAudio(aiText);
+          const aiResponse = await getAiResponse(sttText);
+          const aiText = aiResponse.text;
+          const aiAudioUrl = aiResponse.audio;
 
-          // 5. 在前端顯示 AI 的語音與文字訊息 (type: 'ai')
           setMessages((prev) => [
             ...prev,
-            {
-              type: "ai",
-              audio: aiAudioUrl,
-              text: aiText,
-            },
+            { type: "ai", audio: aiAudioUrl, text: aiText }
           ]);
 
-          // 6. 將本次對話記錄存入 localStorage 以便 ReviewConversations.js 讀取
           const newRecord = {
             date: new Date().toLocaleString(),
-            content: `使用者：${sttText}\nAI：${aiText}`,
-          };
-
-          // 讀取現有的對話紀錄（若無則建立空陣列）
+            content: `學生：<span class="student-label">${sttText}</span><br>AI導師：<span class="ai-label">${aiText}</span>`,
+          };          
           const stored = localStorage.getItem("conversations");
           const existingConversations = stored ? JSON.parse(stored) : [];
           existingConversations.push(newRecord);
@@ -92,13 +130,12 @@ const FreeConversations = () => {
     }
   };
 
-  // 語音轉文字：呼叫後端 /speech_to_text/ API
   const convertSpeechToText = async (audioBlob) => {
     const formData = new FormData();
     formData.append("audio", audioBlob, "recording.wav");
 
     try {
-      const response = await fetch(`${BASE_URL}/speech_to_text/`, {
+      const response = await fetch(`${BASE_URL}/speech-to-text`, {
         method: "POST",
         body: formData,
       });
@@ -106,7 +143,6 @@ const FreeConversations = () => {
         throw new Error(`STT API 錯誤: ${response.status}`);
       }
       const data = await response.json();
-      // 假設後端回傳格式: { text: "辨識後的文字" }
       return data.text || "無法辨識語音";
     } catch (error) {
       console.error("convertSpeechToText error:", error);
@@ -114,49 +150,43 @@ const FreeConversations = () => {
     }
   };
 
-  // AI 生成回應 (Placeholder)：未來可整合 GPT 或其他 NLP 模型
+  // 修改 getAiResponse，使用 /ai-response 並傳入 chat_prompt
   const getAiResponse = async (userText) => {
-    return `你剛才說的是：${userText}`;
-  };
-
-  // 文字轉語音：呼叫後端 /generate/tts/ API，回傳 wav 檔案
-  const getTtsAudio = async (text) => {
+    console.log("userText:", userText); // 檢查是否有傳入內容
     try {
-      const response = await fetch(
-        `${BASE_URL}/generate/tts/?text=${encodeURIComponent(text)}`
-      );
+      const response = await fetch(`${BASE_URL}/ai-response`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: userText }),
+      });
       if (!response.ok) {
-        throw new Error(`TTS API 錯誤: ${response.status}`);
+        throw new Error(`AI API 錯誤: ${response.status}`);
       }
-      const arrayBuffer = await response.arrayBuffer();
-      const audioBlob = new Blob([arrayBuffer], { type: "audio/wav" });
-      return URL.createObjectURL(audioBlob);
+      const data = await response.json();
+      console.log("後端回傳 JSON 格式：", data);
+      return data;
     } catch (error) {
-      console.error("getTtsAudio error:", error);
-      return "";
+      console.error("getAiResponse error:", error);
+      return { text: "無法取得 AI 回應", audio: "" };
     }
+  };  
+
+  const openModal = (text) => {
+    setModalText(text);
+    setModalOpen(true);
   };
 
   return (
     <div className="chat-container">
-      {/* 上方標題區域 */}
       <div className="every-title-area">
-        <img
-          src="/images/heart-hand.png"
-          alt="手語愛心"
-          className="every-heart-hand"
-        />
+        <img src="/images/heart-hand.png" alt="手語愛心" className="every-heart-hand" />
         <h1>生聲 — 自由對話</h1>
       </div>
-
-      {/* 聊天框 */}
       <div className="chat-box">
         <Link to="/dialogue" className="back-button">
           <FaArrowLeft size={24} />
         </Link>
         <h2 className="chat-title">AI 導師</h2>
-
-        {/* 訊息列表 */}
         <div className="chat-messages">
           {messages.length === 0 ? (
             <div className="empty-message">請點擊錄音鍵開始對話</div>
@@ -168,12 +198,8 @@ const FreeConversations = () => {
                   <source src={msg.audio} type="audio/wav" />
                   Your browser does not support the audio element.
                 </audio>
-                {/* 書本圖示：顯示 AI 回覆文字內容 */}
                 {msg.type === "ai" && msg.text && (
-                  <button
-                    className="book-icon"
-                    onClick={() => alert(`AI 回覆文字：${msg.text}`)}
-                  >
+                  <button className="book-icon" onClick={() => openModal(msg.text)}>
                     <FaBook size={20} />
                   </button>
                 )}
@@ -181,25 +207,27 @@ const FreeConversations = () => {
             ))
           )}
         </div>
-
-        {/* 底部功能按鈕 */}
         <div className="chat-controls">
-          <button className="icon-button">
-            {/* 這裡可以放 icon */}
-          </button>
+          <button className="icon-button">{/* 可放其他 icon */}</button>
           <button onClick={handleRecord} className="record-button">
             {recording ? "。。。" : <FaMicrophone size={24} />}
           </button>
-          <button className="icon-button">
-            {/* 這裡可以放 icon */}
-          </button>
+          <button className="icon-button">{/* 可放其他 icon */}</button>
         </div>
       </div>
-
-      {/* 回上一頁的按鈕 */}
-      <Link to="/dialogue" className="go-back-button">
-        回上一頁
+      <Link to="/review" className="go-back-button">
+        交談回顧
       </Link>
+      {modalOpen && (
+        <div className="modal" onClick={() => setModalOpen(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <span className="close" onClick={() => setModalOpen(false)}>
+              &times;
+            </span>
+            <p>{modalText}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
