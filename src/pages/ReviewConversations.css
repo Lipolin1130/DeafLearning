@@ -1,5 +1,4 @@
 /* 交談回顧專屬 CSS */
-
 .review-container {
     position: relative;
     display: flex;
@@ -96,12 +95,20 @@
   transform: scale(1.15);
 }
 
-.student-label {
-  color: #887e75;
+.label-student {
+  color: #5b75de;
+  font-size: 1.1rem;
   font-weight: bold;
 }
 
-.ai-label {
-  color: #887e75;
+.label-ai {
+  color: #5b75de;
+  font-size: 1.1rem;
   font-weight: bold;
+}
+
+.default-font {
+  font-family: sans-serif;
+  font-size: 1rem;
+  font-weight: normal;
 }
