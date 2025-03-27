@@ -8,8 +8,8 @@ WORKDIR /src
 COPY package*.json ./
 
 # 安裝所有的依賴
-RUN npm install
-
+RUN npm instal
+RUN npm install react-scripts
 # 複製專案檔案到容器中
 COPY . .
 

@@ -63,7 +63,7 @@ const FreeConversations = () => {
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
 
-  const BASE_URL = "http://localhost:5000";
+  const BASE_URL = "http://140.134.25.53:5000";
 
   const handleRecord = async () => {
     if (!recording) {
