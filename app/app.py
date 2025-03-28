@@ -5,8 +5,8 @@ import time
 # import openai  # GPT 相關部分（未使用可保留或刪除）
 import requests  # 呼叫外部 API
 import re
+import base64
 from pydub import AudioSegment  # 轉換音訊檔
-import urllib.parse  # 新增：用於 URL 編碼
 from flask import Flask, request, jsonify
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
@@ -16,9 +16,9 @@ from flask_cors import CORS
 
 # from vosk import Model, KaldiRecognizer
 # from gtts import gTTS
-import wave, json
+# import wave, json
+# import io
 import uuid
-import io
 
 app = Flask(__name__)
 CORS(app, origins=["http://140.134.25.53:3000"])
@@ -134,22 +134,6 @@ def analyze():
 # 設定後端 EchoLearn API 的 Base URL
 ECHOLEARN_API_BASE = "http://140.134.25.53:8081/api"
 
-def clean_audio_folder(folder, max_age_seconds=300):
-    """
-    刪除資料夾中修改時間超過 max_age_seconds 秒的檔案。
-    """
-    now = time.time()
-    for filename in os.listdir(folder):
-        file_path = os.path.join(folder, filename)
-        if os.path.isfile(file_path):
-            file_age = now - os.path.getmtime(file_path)
-            if file_age > max_age_seconds:
-                try:
-                    os.remove(file_path)
-                    print(f"Deleted old audio file: {file_path}")
-                except Exception as e:
-                    print(f"Error deleting file {file_path}: {e}")
-
 @app.route('/speech-to-text', methods=['POST'])
 def speech_to_text():
     if 'audio' not in request.files:
@@ -211,8 +195,8 @@ def ai_response():
     except Exception as e:
         return jsonify({'error': f'呼叫後端 AI 回應失敗: {str(e)}'}), 500
 
-    # 移除 # 與 * 符號
-    ai_text = re.sub(r'[#*]', '', ai_text).strip()
+    # 移除 # 、 * 、 - 符號
+    ai_text = re.sub(r'[#*-]', '', ai_text).strip()
     # 移除常見 emoji（例如表情符號）
     emoji_pattern = re.compile("[" 
                                u"\U0001F600-\U0001F64F"  # emoticons
@@ -221,23 +205,21 @@ def ai_response():
                                u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
                                "]+", flags=re.UNICODE)
     ai_text = emoji_pattern.sub(r'', ai_text).strip()
-    # 新增：移除換行符號，避免 TTS API 因格式問題失敗
+    # 移除換行符號，避免 TTS API 因格式問題失敗
     ai_text = ai_text.replace("\n", " ").replace("\r", " ").strip()
     print("AI text after cleaning:", ai_text)
 
-    # 呼叫後端 API 取得文字轉語音（TTS）的音檔
+    # 呼叫後端 TTS API 取得音檔，但不寫入檔案，直接轉換成 Base64
     tts_url = f"{ECHOLEARN_API_BASE}/generate/tts/"
     params = {'text': ai_text}
     try:
         tts_resp = requests.get(tts_url, params=params)
+        print("TTS status code:", tts_resp.status_code)
         if tts_resp.status_code == 200:
-            static_dir = os.path.join(os.getcwd(), "static", "audio")
-            os.makedirs(static_dir, exist_ok=True)
-            audio_filename = f"{uuid.uuid4().hex}.wav"
-            audio_path = os.path.join(static_dir, audio_filename)
-            with open(audio_path, 'wb') as f:
-                f.write(tts_resp.content)
+            # 將二進位音檔資料轉成 Base64 字串
+            audio_base64 = base64.b64encode(tts_resp.content).decode('utf-8')
         else:
+            print("TTS response text:", tts_resp.text)
             return jsonify({
                 'error': f'後端TTS轉換失敗，狀態碼: {tts_resp.status_code}',
                 'response': tts_resp.text
@@ -245,8 +227,7 @@ def ai_response():
     except Exception as e:
         return jsonify({'error': f'呼叫後端TTS轉換失敗: {str(e)}'}), 500
 
-    audio_url = request.host_url + f"static/audio/{audio_filename}"
-    return jsonify({'text': ai_text, 'audio': audio_url})
+    return jsonify({'text': ai_text, 'audio': audio_base64})
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000, host='0.0.0.0')

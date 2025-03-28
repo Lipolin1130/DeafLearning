@@ -198,9 +198,12 @@
   border-radius: 8px;
   max-width: 500px;
   width: 90%;
+  max-height: 80vh;             /* 最大高度為 viewport 高度的80% */
+  overflow-y: auto;             /* 超出部分顯示垂直捲軸 */
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   animation: slideDown 0.3s ease-out;
   position: relative;
+  overflow-wrap: break-word;
 }
 
 /* 關閉按鈕 */
