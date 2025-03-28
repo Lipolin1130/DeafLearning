@@ -1,0 +1,101 @@
+  .collection-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* align-items: flex-start; */
+    width: 100%;
+    height: calc(100vh - 60px);
+    margin-top: 60px;
+    box-sizing: border-box;
+    background-color: #FCE7DA;
+  }
+
+  .every-title-area {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-radius: 8px;
+    z-index: 10;
+  }
+
+  .every-heart-hand {
+    width: 50px;
+    height: auto;
+    margin-right: 0rem;
+  }
+
+  .every-title-area h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    text-shadow: 0.5px 0.5px 0px rgba(0, 0, 0, 0.3);
+  }
+
+  .word {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+  }
+
+  .collection-subtitle{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .subtitle-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  .word-table{
+    width: 80%;
+    border-collapse: collapse;
+    background-color: #ffeab0;
+    margin-top: 1rem;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    border: 6px solid #999;
+    border-radius: 12px;
+  }
+
+  .word-table thead {
+    background-color: #ddd;
+    /* border-bottom: 2px solid #000; */
+  }
+
+  .word-table th,
+  .word-table td {
+    padding: 0.75rem;
+    text-align: left;
+    font-weight: bold;
+    font-size: 1.1rem;
+    /* border-right: 2px solid #000; */
+    border: 4px solid #999;
+  }
+
+  .word-table td:first-child {
+    width:20%;
+  }
+
+  .remove-btn {
+    background-color: #ccc;
+    color: #333;
+    border: 2px solid #555;
+    padding: 0.3rem 0.8rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .remove-btn:hover {
+    transform: scale(1.1);
+  }
+
+

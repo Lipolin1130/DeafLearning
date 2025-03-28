@@ -16,7 +16,7 @@ function StoryLearning() {
       </div>
 
       <div className="description-container">
-        <p className="description">創建故事可以建立屬於自己的故事喔！</p>
+        <p className="description">創建故事可以建立屬於自己的故事ㄛ！</p>
       </div>
       <Link to="/" className="go-back-button">回首頁</Link>
     </div>

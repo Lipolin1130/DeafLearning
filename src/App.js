@@ -20,10 +20,12 @@ import ClassicalStoryDetail from "./pages/ClassicalStoryDetail";
 import WordLearning from "./pages/WordLearning";
 
 import { StoryProvider } from "./pages/StoryContext"; // save the topic and frames of story
+import { CollectionProvider } from "./pages/CollectionContext"; // save the collection word
 
 function App() {
   return (
     <StoryProvider>
+    <CollectionProvider>
     <Router>
       <div>
         {/* 1. 固定頂部導覽列 */}
@@ -82,6 +84,7 @@ function App() {
         </Routes>
       </div>
     </Router>
+    </CollectionProvider>
     </StoryProvider>
   );
 }

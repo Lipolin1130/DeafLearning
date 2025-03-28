@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FaMicrophone, FaArrowLeft, FaBook } from "react-icons/fa";
 import "./FreeConversations.css";
 
-// Helper: 將字串寫入 DataView
+// Helper: 將字串寫入 DataView（用於 WAV 編碼）
 function writeString(view, offset, string) {
   for (let i = 0; i < string.length; i++) {
     view.setUint8(offset + i, string.charCodeAt(i));
@@ -54,6 +54,17 @@ function encodeWAV(audioBuffer) {
   return new Blob([view], { type: "audio/wav" });
 }
 
+// Helper: 將 Base64 字串轉換成 Blob
+function base64ToBlob(base64, mimeType = "audio/wav") {
+  const byteCharacters = atob(base64);
+  const byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+  const byteArray = new Uint8Array(byteNumbers);
+  return new Blob([byteArray], { type: mimeType });
+}
+
 const FreeConversations = () => {
   const [messages, setMessages] = useState([]);
   const [recording, setRecording] = useState(false);
@@ -63,6 +74,7 @@ const FreeConversations = () => {
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
 
+  // 後端 API 端點
   const BASE_URL = "http://localhost:5000";
 
   const handleRecord = async () => {
@@ -81,6 +93,7 @@ const FreeConversations = () => {
         };
 
         mediaRecorder.onstop = async () => {
+          // 將原始錄音 Blob 轉成 ArrayBuffer，再解碼為 AudioBuffer，然後以 WAV 格式封裝
           const rawBlob = new Blob(audioChunksRef.current);
           const arrayBuffer = await rawBlob.arrayBuffer();
           const audioContext = new AudioContext();
@@ -88,21 +101,26 @@ const FreeConversations = () => {
           const wavBlob = encodeWAV(decodedAudio);
           const audioUrl = URL.createObjectURL(wavBlob);
 
+          // 顯示使用者錄音
           setMessages((prev) => [
             ...prev,
             { type: "user", audio: audioUrl }
           ]);
 
           const sttText = await convertSpeechToText(wavBlob);
-
           if (sttText === "無法辨識語音" || sttText === "語音辨識失敗") {
             openModal("語音辨識失敗，請確認麥克風設定或再試一次！");
             return;
           }
 
+          // 呼叫 AI 回應 API
           const aiResponse = await getAiResponse(sttText);
           const aiText = aiResponse.text;
-          const aiAudioUrl = aiResponse.audio;
+          const aiAudioBase64 = aiResponse.audio;
+
+          // 將 Base64 字串轉換成 Blob，並建立播放 URL
+          const blob = base64ToBlob(aiAudioBase64, "audio/wav");
+          const aiAudioUrl = URL.createObjectURL(blob);
 
           setMessages((prev) => [
             ...prev,
@@ -111,8 +129,8 @@ const FreeConversations = () => {
 
           const newRecord = {
             date: new Date().toLocaleString(),
-            content: `學生：<span class="student-label">${sttText}</span><br>AI導師：<span class="ai-label">${aiText}</span>`,
-          };          
+            content: `<span class="label-student">學生：</span><span class="default-font">${sttText}</span><br><span class="label-ai">AI導師：</span><span class="default-font">${aiText}</span>`,
+          };
           const stored = localStorage.getItem("conversations");
           const existingConversations = stored ? JSON.parse(stored) : [];
           existingConversations.push(newRecord);
@@ -133,7 +151,6 @@ const FreeConversations = () => {
   const convertSpeechToText = async (audioBlob) => {
     const formData = new FormData();
     formData.append("audio", audioBlob, "recording.wav");
-
     try {
       const response = await fetch(`${BASE_URL}/speech-to-text`, {
         method: "POST",
@@ -150,9 +167,9 @@ const FreeConversations = () => {
     }
   };
 
-  // 修改 getAiResponse，使用 /ai-response 並傳入 chat_prompt
+  // 呼叫 AI 回應 API，並傳回包含 AI 回應文字及 TTS 的 Base64 字串
   const getAiResponse = async (userText) => {
-    console.log("userText:", userText); // 檢查是否有傳入內容
+    console.log("userText:", userText);
     try {
       const response = await fetch(`${BASE_URL}/ai-response`, {
         method: "POST",
@@ -169,7 +186,7 @@ const FreeConversations = () => {
       console.error("getAiResponse error:", error);
       return { text: "無法取得 AI 回應", audio: "" };
     }
-  };  
+  };
 
   const openModal = (text) => {
     setModalText(text);
